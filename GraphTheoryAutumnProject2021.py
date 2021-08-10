@@ -65,3 +65,28 @@ class State:
             for state in self.arrows:
                 states = (states | state.followes())
         return states
+
+# NFA - A non-deterministic finite automaton.
+class NFA:
+    def __init__(self, start, end):
+        self.start = start
+        self.end = end
+
+    def match(self, s):
+        """Return True iff this NFA (instance) matches the string s."""
+        # A list of previous states.
+        previous = self.start.followes()
+        # Loop through the string, One character at a time.
+        for c in s:
+            # Start with an empty set of current states.
+            current = set()
+            # Loop throuth the previous states.
+            for state in previous:
+                # Check if there is a c arrow.
+                if state.label == c:
+                    # Add followes for next state.
+                    current = (current | state.arrows[0].followes())
+            # Replace previous with current.
+            previous = current
+        # If the final state is in previous, then return True. if not return False. 
+        return (self.end in previous)
