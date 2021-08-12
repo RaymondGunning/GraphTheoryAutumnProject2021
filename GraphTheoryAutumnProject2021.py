@@ -90,3 +90,31 @@ class NFA:
             previous = current
         # If the final state is in previous, then return True. if not return False. 
         return (self.end in previous)
+
+#NFA Stack
+def re_to_nfa(postfix):
+    stack = []
+    for c in postfix:
+        if c == '.':
+            #To Pop top NFA off stack.
+            nfa2 = stack[-1]
+            stack = stack[:-1]
+
+# Tests
+if __name__ == "__main__":
+    tests = [  ["(a.b|b*)",   ["ab", "b", "bb", "a"]]
+             , ["a.(b.b)*.a", ["aa", "abba", "aba"]]
+             , ["1.(0.0)*.1", ["11", "100001", "11001"]]
+    ]
+
+for test in tests:
+        infix = test[0]
+        print(f"infix:    {infix}")
+        postfix = shunt(infix)
+        print(f"postfix:  {postfix}")
+        nfa = re_to_nfa(postfix)
+        print(f"thompson: {nfa}")
+        for s in test[1]:
+            match = nfa.match(s)
+            print(f"Match '{s}': {match}")
+        print()
