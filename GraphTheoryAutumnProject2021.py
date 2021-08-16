@@ -71,7 +71,7 @@ class NFA:
     def __init__(self, start, end):
         self.start = start
         self.end = end
-
+# Matching
     def match(self, s):
         """Return True iff this NFA (instance) matches the string s."""
         # A list of previous states.
@@ -96,9 +96,81 @@ def re_to_nfa(postfix):
     stack = []
     for c in postfix:
         if c == '.':
+            # To Pop top NFA off stack.
+            nfa2 = stack[-1]
+            stack = stack[:-1]
+            # Pop next NFA off stack.
+            nfa1 = stack[-1]
+            stack = stack[:-1]
+            # Accept state of NFA1 non-accept.
+            nfa1.end.accept = False
+            # point at start state of nfa2.
+            nfa1.end.arrows.append(nfa2.start)
+            # A new NFA with nfa1's start state and nfa2's end state.
+            nfa = NFA(nfa1.start, nfa2.end)
+            # Push to the stack.
+            stack.append(nfa)
+        elif c == '|':
             #To Pop top NFA off stack.
             nfa2 = stack[-1]
             stack = stack[:-1]
+            # Pop the next NFA off stack.
+            nfa1 = stack[-1]
+            stack = stack[:-1]
+            # New start and end states.
+            start = State(None, [], False)
+            end = State(None, [], True)
+            # Make new start state point at old start states.
+            start.arrows.append(nfa1.start)
+            start.arrows.append(nfa2.start)
+            # Make old end states non-accept.
+            nfa1.end.accept = False
+            nfa2.end.accept = False
+            # Point old end states to new one.
+            nfa1.end.arrows.append(end)
+            nfa2.end.arrows.append(end)
+            # A new NFA.
+            nfa = NFA(start, end)
+            # Push to the stack.
+            stack.append(nfa)
+        elif c == '*':
+            # Pop one NFA off stack.
+            nfa1 = stack[-1]
+            stack = stack[:-1]
+            # Create new start and end states.
+            start = State(None, [], False)
+            end = State(None, [], True)
+            # Make new start state point at old start state.
+            start.arrows.append(nfa1.start)
+            # And at the new end state.
+            start.arrows.append(end)
+            # Make old end state non-accept.
+            nfa1.end.accept = False
+            # Make old end state point to new end state.
+            nfa1.end.arrows.append(end)
+            # Make old end state point to old start state.
+            nfa1.end.arrows.append(nfa1.start)
+            # Make a new NFA.
+            nfa = NFA(start, end)
+            # Push to the stack.
+            stack.append(nfa)
+        else:
+            # NFA for the non-special character c.
+            # Create the end and start state.
+            end = State(None, [], True)
+            start = State(c, [], False)
+            # Point new start state at new end state.
+            start.arrows.append(end)
+            # NFA with the start and end state.
+            nfa = NFA(start, end)
+            # Append the NFA to the NFA stack.
+            stack.append(nfa)
+    
+    # There should only be one NFA on the stack if not return 0.
+    if len(stack) != 1:
+        return None
+    else:
+        return stack[0]
 
 # Tests
 if __name__ == "__main__":
