@@ -1,3 +1,14 @@
+import argparse
+
+parser = argparse.ArgumentParser(description='')
+parser.add_argument('regex', type=str, metavar='R', action='store', 
+                    help='')
+parser.add_argument('input', type=str, metavar='I', action='store', 
+                    help='')
+
+args = parser.parse_args()
+
+
 # The shunting yard algorithm
 def shunt(infix):
     """Convert infix to postfix."""
@@ -147,7 +158,7 @@ def re_to_nfa(postfix):
             # Make old end state non-accept.
             nfa1.end.accept = False
             # Make old end state point to new end state.
-            nfa1.end.arrows.append(end)
+            nfa1.end.arrows.append(end) 
             # Make old end state point to old start state.
             nfa1.end.arrows.append(nfa1.start)
             # Make a new NFA.
@@ -174,18 +185,14 @@ def re_to_nfa(postfix):
 
 # Tests
 if __name__ == "__main__":
-    tests = [  ["(a.b|b*)",   ["ab", "b", "bb", "a"]]
-             , ["a.(b.b)*.a", ["aa", "abba", "aba"]]
-             , ["1.(0.0)*.1", ["11", "100001", "11001"]]
-    ]
+    
 
-for test in tests:
         infix = test[0]
-        print(f"infix:    {infix}")
+        
         postfix = shunt(infix)
-        print(f"postfix:  {postfix}")
+        
         nfa = re_to_nfa(postfix)
-        print(f"thompson: {nfa}")
+        
         for s in test[1]:
             match = nfa.match(s)
             print(f"Match '{s}': {match}")
