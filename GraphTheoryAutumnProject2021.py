@@ -1,10 +1,13 @@
+#imports
 import argparse
 
-parser = argparse.ArgumentParser(description='')
+parser = argparse.ArgumentParser(description='This program allows the user to enter a regular expression and a file as command line arguments and out puts the number of matches found ')
+#regular expression command line arguments
 parser.add_argument('regex', type=str, metavar='R', action='store', 
-                    help='')
+                    help='Enter a regular expression in the command line. Example: f.a.b')
+#input file command line arguments
 parser.add_argument('input', type=str, metavar='I', action='store', 
-                    help='')
+                    help='Enter a Text file containing what you want to search in the command line. Example: Text.txt')
 
 args = parser.parse_args()
 
@@ -16,26 +19,26 @@ def shunt(infix):
     postfix = ""
     # Shunting operator stack.
     stack = ""
-    # Operator precedence.
+    # Operator priority.
     prec = {'*': 100, '.': 90, '|': 80}
     # Loop the input one character at a time.
     for c in infix:
-        # c is an operator.
+        # Adding c as an operator.
         if c in {'*', '.', '|'}:
             # Check to see what is on the stack.
             while len(stack) > 0 and stack[-1] != '(' and prec[stack[-1]] >= prec[c]:
-                # Append operator at top of the stack to output.
+                # Attach operator at top of the stack to output.
                 postfix = postfix + stack[-1]
                 # Remove the operator from the stack.
                 stack = stack[:-1]
-            # Push c to the stack.
+            # Add c to the stack.
             stack = stack + c
         elif c == '(':
-            # Push c to the stack.
+            # Add c to the stack.
             stack = stack + c
         elif c == ')':
             while stack[-1] != "(":
-                # Append operator at top of stack to output.
+                # Attach operator at top of stack to output.
                 postfix = postfix + stack[-1]
                 # Remove operator from stack.
                 stack = stack[:-1]
@@ -48,7 +51,7 @@ def shunt(infix):
 
     # Empty the stack.
     while len(stack) != 0:
-        # Append operator at top of stack to output.
+        # Attach operator at top of stack to output.
         postfix = postfix + stack[-1]
         # Remove the operator from the stack.
         stack = stack[:-1]
@@ -57,24 +60,27 @@ def shunt(infix):
 
 # Thomson's Construction
 class State:
-    """A state and its arrows in Thompson's construction."""
+    """State and Arrows in Thompson's construction."""
     def __init__(self, label, arrows, accept):
         """label is the arrow labels, arrows is a list of states to
            point to, accept is a boolean as to whether this is an accept
-           state.
+           state.self is to include the stae in the returned set
         """
         self.label = label
         self.arrows = arrows
         self.accept = accept
     
     def followes(self):
-        """The set of states that are gotten from following this state
-           and all its e arrows."""
+        """ Set of states that are acquired from following this state
+           and its e arrows."""
         
         states = {self}
+        # if statement to check if the state has e arrows if not then it has none 
         if self.label is None:
+            # loops through the states arrows
             for state in self.arrows:
                 states = (states | state.followes())
+        #return states
         return states
 
 # NFA - A non-deterministic finite automaton.
@@ -174,7 +180,7 @@ def re_to_nfa(postfix):
             start.arrows.append(end)
             # NFA with the start and end state.
             nfa = NFA(start, end)
-            # Append the NFA to the NFA stack.
+            # Add the NFA to the NFA stack.
             stack.append(nfa)
     
     # There should only be one NFA on the stack if not return 0.
@@ -183,17 +189,28 @@ def re_to_nfa(postfix):
     else:
         return stack[0]
 
-# Tests
+#main
 if __name__ == "__main__":
     
+    # saves input file to variable
+    filereader = open(args.input)
+    # saves expression from command line
+    infix = args.regex
 
-        infix = test[0]
-        
-        postfix = shunt(infix)
-        
-        nfa = re_to_nfa(postfix)
-        
-        for s in test[1]:
-            match = nfa.match(s)
-            print(f"Match '{s}': {match}")
-        print()
+    counter = 0
+    #converting infix to postfix
+    postfix = shunt(infix)
+    
+    #converting postfix to nfa
+    nfa = re_to_nfa(postfix)
+    # loops through textfile
+    for s in filereader:
+        #checking for a match
+        match = nfa.match(s)
+        #if there is a match add to the counter
+        if(match == True):
+            counter+=1
+    #output counter
+    print(counter)
+    #close input file
+    filereader.close()
