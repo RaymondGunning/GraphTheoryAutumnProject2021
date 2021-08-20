@@ -8,9 +8,10 @@ parser.add_argument('regex', type=str, metavar='R', action='store',
 #input file command line arguments
 parser.add_argument('input', type=str, metavar='I', action='store', 
                     help='Enter a Text file containing what you want to search in the command line. Example: Text.txt')
+#-verbose enhancements attempt
+#parser.add_argument("-v", "--verbose", action="store_true", help="Flag to display a list of matches found")
 
 args = parser.parse_args()
-
 
 # The shunting yard algorithm
 def shunt(infix):

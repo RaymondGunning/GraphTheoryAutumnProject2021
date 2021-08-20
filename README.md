@@ -10,6 +10,7 @@ Once you have cloned the repository and have python installed on your computer o
 
 # Explanation of Algorithm
 
+Edsger Dijkstra developed his "Shunting Yard" algorithm to convert an infix expression into a postfix expression. In computer science, the shunting-yard algorithm is a method for resolving mathematical expressions in most commonly infix notations. the shunting yard algorithm is stack-based. Infix expressions are the form of mathematical notation most people are used to, for instance "3 + 4" or "3 + 4 × (2 − 1). For the conversion there are two text variables the input and the output. There is also a stack that holds elements and sorts them into a que where some elements may have a higher priority than others this is implemented by moving aside less important elements so that more important elements can be handles first. Thomson’s algorithm is another that I used is a method of transforming a regular expression into an equivalent nondeterministic finite automaton. This NFA can be used to match strings against the regular expression. For this project i Read in a text file that i used a Nfa stack to loop through, We also had to ouput the number of matches that were relavent to the contents in a text file . This algorithm is credited to Ken Thompson.
 
 
 # Question 1
@@ -38,4 +39,23 @@ Once you have cloned the repository and have python installed on your computer o
 
 - Explain what is meant by the term irregular language in the context of regular expressions?
 
+    When talking about or programming with irregular languages also known as non regular languages the goal is to assume that the languages at question or the ones that we are unsure about are regular.How does one prove that a language is not regular? We could try proving that there is no DFA or NFA that accepts it, or no Regular Expression or Regex for short that generates it, but this kind of testing is generally rather difficult to make. It is hard to rule out all possible automata and possible regular expressions. Instead, we will look at a property that all regular languages have; proving that a given language does not have this property then becomes a way of proving that that language is not regular. Another problem we have with regex is that given an expression of the non-regualr sort but the parameter value is a constant then the language is regular. To prove that a language is not regular, we use proof by contradiction keeping in mind that all regualr languages can be designed using finite state machines and we know most of the properties for these and we also know there limitations and becasue of their limitations some languages that cannot be designed using finite state machines and this is where we can classify these languages ans non regular this is where The Pumping lemma technique comes in handy becasue it can be only used to prove if a language is irregular using this Method - 
+    
+    If 'A' is a regular language then 'A' has a puming length of 'P' such that any string 'S' where the length of the string is greater than or equal to the pumping length may be divided into 3 parts S = x y z such as the following conditions must be true
 
+                            (1) If you increase Y any number of times and the string you obtain after increasing Y must also belong to A that is the language.
+
+                            (2) The length of Y should be greater than zero
+                            (3) X and Y must be less than or equal to P The pumping length
+
+    So in conclusion for a language to be regular all 3 of these conditions conditions must be true if not and cannot satisfy all the conditions at the same time that means S cannot be pumped in the result of this their is a Contradiction and it become irregular.
+    
+# Refrences
+
+Q1 - http://www.cs.man.ac.uk/~pjj/cs212/fix.html
+
+Q2 - https://en.wikipedia.org/wiki/Thompson%27s_construction
+
+     https://en.wikipedia.org/wiki/Regular_expression
+
+Q3 - https://www.youtube.com/watch?v=Ph7Z9YttM0Q&ab_channel=lydia
